@@ -4,8 +4,8 @@ import javax.swing.*;
 import javax.swing.border.EmptyBorder;
 import java.awt.*;
 
-public class TicTacToe extends JFrame {
-    public TicTacToe() {
+public class TicTacToeView extends JFrame {
+    public TicTacToeView() {
         initialize();
     }
 
@@ -52,7 +52,15 @@ public class TicTacToe extends JFrame {
         return panel;
     }
 
-    public static void main(String[] args) {
-        SwingUtilities.invokeLater(TicTacToe::new);
+    public void setGameStateMessage(String msg) {
+
+    }
+
+    public void redrawFieldSquare(int row, int col, String player) {
+
+    }
+
+    public void clearField() {
+
     }
 }
