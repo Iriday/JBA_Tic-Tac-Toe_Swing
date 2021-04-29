@@ -1,16 +1,14 @@
 package tictactoe;
 
-import javax.swing.*;
-import java.lang.reflect.InvocationTargetException;
-
 public class TicTacToeController {
-    private TicTacToeView view;
+    private final TicTacToeView view;
     private final TicTacToeModel model;
 
-    public TicTacToeController() throws InvocationTargetException, InterruptedException {
-        SwingUtilities.invokeAndWait(() -> this.view = new TicTacToeView());
+    public TicTacToeController() {
+        this.view = new TicTacToeView();
         this.model = new TicTacToeModel();
 
+        view.initialize(this);
         view.setGameStateMessage(model.getGameState().message);
     }
 
@@ -27,7 +25,7 @@ public class TicTacToeController {
         view.setGameStateMessage(model.getGameState().message);
     }
 
-    public static void main(String[] args) throws InvocationTargetException, InterruptedException {
+    public static void main(String[] args) {
         new TicTacToeController();
     }
 }
