@@ -32,24 +32,42 @@ public class TicTacToeModel {
      * Make a move and place O or X on the field at the specified coords.
      * Coords start from 0.
      *
-     * @return true if the cell is empty and the move was performed, otherwise false.
+     * @return true if the cell was empty and the move was performed, otherwise false.
      */
     public boolean makeMove(int row, int col) {
         if (row < 0 || col < 0 || row >= rows || col >= cols) {
             throw new IllegalArgumentException("Coordinates out of range");
         }
 
-        if (isWinner(gameField, oPlayer) || isWinner(gameField, xPlayer)) {
+        if (isGameFinished()) {
             return false;
         }
 
         if (gameField[row][col] != null) {
             return false;
-        } else {
-            gameField[row][col] = playerSwitcher ? oPlayer : xPlayer;
-            playerSwitcher = !playerSwitcher;
-            return true;
         }
+
+        move(row, col);
+        return true;
+    }
+
+    /***
+     * @return coords if move was performed, otherwise null.
+     */
+    public int[] makeRandomMove() {
+        if (isGameFinished()) {
+            return null;
+        }
+
+        int[] coords = TicTacToeUtils.findRandomEmptyCell(gameField);
+
+        move(coords[0], coords[1]);
+        return coords;
+    }
+
+    private void move(int row, int col) {
+        gameField[row][col] = playerSwitcher ? oPlayer : xPlayer;
+        playerSwitcher = !playerSwitcher;
     }
 
     public GameState getGameState() {
@@ -70,6 +88,10 @@ public class TicTacToeModel {
     public void resetGame() {
         gameField = generateGameField(rows, cols);
         playerSwitcher = false;
+    }
+
+    public boolean isGameFinished() {
+        return isWinner(gameField, oPlayer) || isWinner(gameField, xPlayer) || isFieldFull(gameField);
     }
 
     private static String[][] generateGameField(int rows, int cols) {
