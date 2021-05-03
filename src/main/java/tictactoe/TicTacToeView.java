@@ -44,7 +44,8 @@ public class TicTacToeView extends JFrame {
                 rows = 3;
                 cols = 3;
 
-                add(createGameField());
+                add(createGameField(), BorderLayout.CENTER);
+                add(createTopPanel(), BorderLayout.NORTH);
                 add(createSouthPanel(), BorderLayout.SOUTH);
 
                 setVisible(true);
@@ -74,21 +75,33 @@ public class TicTacToeView extends JFrame {
         return gameFieldPanel;
     }
 
+    private JPanel createTopPanel() {
+        var panel = new JPanel();
+        var resetBtn = new JButton("Reset");
+        var leftPlayerBtn = new JButton("Player1");
+        var rightPlayerBtn = new JButton("Player2");
+
+        resetBtn.addActionListener(resetGameListener);
+        resetBtn.setName("ButtonReset");
+
+        panel.add(leftPlayerBtn);
+        panel.add(resetBtn);
+        panel.add(rightPlayerBtn);
+
+        return panel;
+    }
+
     private JPanel createSouthPanel() {
         var panel = new JPanel();
-        stateLabel = new JLabel("Game state");
-        var resetBtn = new JButton("Reset");
         var border = new EmptyBorder(15, 25, 15, 25);
+        stateLabel = new JLabel("Game state");
 
         stateLabel.setFont(new Font(null, Font.ITALIC, 16));
         stateLabel.setName("LabelStatus");
-        resetBtn.addActionListener(resetGameListener);
-        resetBtn.setName("ButtonReset");
 
         panel.setBorder(border);
         panel.setLayout(new BorderLayout());
         panel.add(BorderLayout.WEST, stateLabel);
-        panel.add(BorderLayout.EAST, resetBtn);
 
         return panel;
     }
@@ -109,6 +122,5 @@ public class TicTacToeView extends JFrame {
                 .stream(gameFieldPanel.getComponents())
                 .map(c -> (JButton) c)
                 .forEach(btn -> btn.setText(" "));
-
     }
 }
