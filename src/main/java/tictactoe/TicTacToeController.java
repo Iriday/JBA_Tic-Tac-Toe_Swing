@@ -10,12 +10,24 @@ public class TicTacToeController {
 
         view.initialize(this);
         view.setGameStateMessage(model.getGameState().message);
+        view.setFieldButtonsEnabled(false);
+    }
+
+    public void startGame() {
+        view.setFieldButtonsEnabled(true);
+        view.setGameStateMessage(model.getGameState().message);
     }
 
     public void makeMove(int row, int col) {
         if (model.makeMove(row, col)) {
             view.redrawFieldSquare(row, col, model.getGameField()[row][col]);
-            view.setGameStateMessage(model.getGameState().message);
+            var gameState = model.getGameState();
+            view.setGameStateMessage(gameState.message);
+
+            switch (gameState) {
+                case DRAW, X_WINS, O_WINS:
+                    view.setFieldButtonsEnabled(false);
+            }
         }
     }
 
@@ -23,6 +35,7 @@ public class TicTacToeController {
         model.resetGame();
         view.clearField();
         view.setGameStateMessage(model.getGameState().message);
+        view.setFieldButtonsEnabled(true);
     }
 
     public static void main(String[] args) {

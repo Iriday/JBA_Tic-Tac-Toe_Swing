@@ -8,12 +8,18 @@ import java.util.Arrays;
 import java.util.Objects;
 
 public class TicTacToeView extends JFrame {
-    private final Font btnFont = new Font(null, Font.ITALIC, 70);
     private TicTacToeController controller;
+
+    private final Font btnFont = new Font(null, Font.ITALIC, 70);
+
     private JPanel gameFieldPanel;
     private JLabel stateLabel;
+    private JButton startResetBtn;
+
     private int rows;
     private int cols;
+
+    private boolean gameStarted = false;
 
     // listeners
     private final ActionListener fieldBtnListener = event -> {
@@ -28,8 +34,14 @@ public class TicTacToeView extends JFrame {
         }
     };
 
-    private final ActionListener resetGameListener = event -> {
-        controller.resetGame();
+    private final ActionListener startResetGameListener = event -> {
+        if (!gameStarted) {
+            controller.startGame();
+            startResetBtn.setText("Reset");
+            gameStarted = true;
+        } else {
+            controller.resetGame();
+        }
     };
 
     public void initialize(TicTacToeController controller) {
@@ -77,15 +89,15 @@ public class TicTacToeView extends JFrame {
 
     private JPanel createTopPanel() {
         var panel = new JPanel();
-        var resetBtn = new JButton("Reset");
+        startResetBtn = new JButton("Start");
         var leftPlayerBtn = new JButton("Player1");
         var rightPlayerBtn = new JButton("Player2");
 
-        resetBtn.addActionListener(resetGameListener);
-        resetBtn.setName("ButtonReset");
+        startResetBtn.addActionListener(startResetGameListener);
+        startResetBtn.setName("ButtonReset");
 
         panel.add(leftPlayerBtn);
-        panel.add(resetBtn);
+        panel.add(startResetBtn);
         panel.add(rightPlayerBtn);
 
         return panel;
@@ -122,5 +134,9 @@ public class TicTacToeView extends JFrame {
                 .stream(gameFieldPanel.getComponents())
                 .map(c -> (JButton) c)
                 .forEach(btn -> btn.setText(" "));
+    }
+
+    public void setFieldButtonsEnabled(boolean enabled) {
+        Arrays.stream(gameFieldPanel.getComponents()).forEach(c -> c.setEnabled(enabled));
     }
 }
