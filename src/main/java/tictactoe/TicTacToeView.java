@@ -7,14 +7,19 @@ import java.awt.event.ActionListener;
 import java.util.Arrays;
 import java.util.Objects;
 
+import static tictactoe.Mode.*;
+
 public class TicTacToeView extends JFrame {
     private TicTacToeController controller;
+    private Mode[] mode;
 
     private final Font btnFont = new Font(null, Font.ITALIC, 70);
 
     private JPanel gameFieldPanel;
     private JLabel stateLabel;
     private JButton startResetBtn;
+    private JButton leftPlayerBtn;
+    private JButton rightPlayerBtn;
 
     private int rows;
     private int cols;
@@ -36,7 +41,7 @@ public class TicTacToeView extends JFrame {
 
     private final ActionListener startResetGameListener = event -> {
         if (!gameStarted) {
-            controller.startGame();
+            controller.startGame(mode);
             startResetBtn.setText("Reset");
             gameStarted = true;
         } else {
@@ -52,6 +57,8 @@ public class TicTacToeView extends JFrame {
                 setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
                 setSize(750, 750);
                 setLocationRelativeTo(null);
+
+                mode = new Mode[]{HUMAN, ROBOT};
 
                 rows = 3;
                 cols = 3;
@@ -90,11 +97,23 @@ public class TicTacToeView extends JFrame {
     private JPanel createTopPanel() {
         var panel = new JPanel();
         startResetBtn = new JButton("Start");
-        var leftPlayerBtn = new JButton("Player1");
-        var rightPlayerBtn = new JButton("Player2");
+        leftPlayerBtn = new JButton(mode[0].mode);
+        rightPlayerBtn = new JButton(mode[1].mode);
 
         startResetBtn.addActionListener(startResetGameListener);
-        startResetBtn.setName("ButtonReset");
+        startResetBtn.setName("ButtonStartReset");
+
+        leftPlayerBtn.addActionListener(event -> {
+            mode[0] = mode[0] == HUMAN ? ROBOT : HUMAN;
+            leftPlayerBtn.setText(mode[0].mode);
+        });
+        leftPlayerBtn.setName("ButtonPlayer1");
+
+        rightPlayerBtn.addActionListener(event -> {
+            mode[1] = mode[1] == HUMAN ? ROBOT : HUMAN;
+            rightPlayerBtn.setText(mode[1].mode);
+        });
+        rightPlayerBtn.setName("ButtonPlayer2");
 
         panel.add(leftPlayerBtn);
         panel.add(startResetBtn);
@@ -138,5 +157,10 @@ public class TicTacToeView extends JFrame {
 
     public void setFieldButtonsEnabled(boolean enabled) {
         Arrays.stream(gameFieldPanel.getComponents()).forEach(c -> c.setEnabled(enabled));
+    }
+
+    public void setPlayerButtonsEnabled(boolean enabled) {
+        leftPlayerBtn.setEnabled(enabled);
+        rightPlayerBtn.setEnabled(enabled);
     }
 }
