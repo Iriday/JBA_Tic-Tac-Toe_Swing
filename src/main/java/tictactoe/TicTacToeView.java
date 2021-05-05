@@ -10,6 +10,9 @@ import java.util.Objects;
 import static tictactoe.Mode.*;
 
 public class TicTacToeView extends JFrame {
+    private static final String START = "Start";
+    private static final String RESET = "Reset";
+
     private TicTacToeController controller;
     private Mode[] mode;
 
@@ -42,11 +45,13 @@ public class TicTacToeView extends JFrame {
     private final ActionListener startResetGameListener = event -> {
         if (!gameStarted) {
             controller.startGame(mode);
-            startResetBtn.setText("Reset");
-            gameStarted = true;
+            startResetBtn.setText(RESET);
         } else {
             controller.resetGame();
+            startResetBtn.setText(START);
         }
+
+        gameStarted = !gameStarted;
     };
 
     public void initialize(TicTacToeController controller) {
@@ -58,7 +63,7 @@ public class TicTacToeView extends JFrame {
                 setSize(750, 750);
                 setLocationRelativeTo(null);
 
-                mode = new Mode[]{HUMAN, ROBOT};
+                mode = new Mode[]{HUMAN, HUMAN};
 
                 rows = 3;
                 cols = 3;
@@ -96,7 +101,7 @@ public class TicTacToeView extends JFrame {
 
     private JPanel createTopPanel() {
         var panel = new JPanel();
-        startResetBtn = new JButton("Start");
+        startResetBtn = new JButton(START);
         leftPlayerBtn = new JButton(mode[0].mode);
         rightPlayerBtn = new JButton(mode[1].mode);
 

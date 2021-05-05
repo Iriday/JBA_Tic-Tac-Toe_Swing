@@ -26,10 +26,11 @@ public class TicTacToeController {
 
     public void startGame(Mode[] mode) {
         makingMove = true;
-        view.setFieldButtonsEnabled(true);
-        view.setGameStateMessage(model.getGameState().message);
-        view.setPlayerButtonsEnabled(false);
         this.mode = mode;
+
+        view.setFieldButtonsEnabled(true);
+        view.setGameStateMessage(GameState.IN_PROGRESS.message);
+        view.setPlayerButtonsEnabled(false);
 
         if (mode[0] == ROBOT && mode[1] == ROBOT) {
             robotMakeMoves(false);
@@ -66,6 +67,7 @@ public class TicTacToeController {
 
     public void resetGame() {
         makingMove = true;
+
         if (robotMoveWorker != null) {
             robotMoveWorker.cancel(true);
         }
@@ -73,15 +75,10 @@ public class TicTacToeController {
         model.resetGame();
         view.clearField();
         view.setGameStateMessage(model.getGameState().message);
-        view.setFieldButtonsEnabled(true);
+        view.setPlayerButtonsEnabled(true);
+        view.setFieldButtonsEnabled(false);
 
-        if (mode[0] == ROBOT && mode[1] == ROBOT) {
-            robotMakeMoves(false);
-        } else if (mode[0] == ROBOT) {
-            robotMakeMoves(true);
-        } else {
-            makingMove = false;
-        }
+        makingMove = false;
     }
 
     private void robotMakeMoves(boolean singleMove) {
