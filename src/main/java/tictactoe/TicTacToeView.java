@@ -68,6 +68,8 @@ public class TicTacToeView extends JFrame {
                 rows = 3;
                 cols = 3;
 
+                setJMenuBar(createMenuBar());
+
                 add(createGameField(), BorderLayout.CENTER);
                 add(createTopPanel(), BorderLayout.NORTH);
                 add(createSouthPanel(), BorderLayout.SOUTH);
@@ -77,6 +79,46 @@ public class TicTacToeView extends JFrame {
         } catch (Exception e) {
             e.printStackTrace();
         }
+    }
+
+    private JMenuBar createMenuBar() {
+        var menuBar = new JMenuBar();
+        var gameMenu = new JMenu("Game");
+        var humanVsHuman = new JMenuItem("Human vs. Human");
+        var humanVsRobot = new JMenuItem("Human vs. Robot");
+        var robotVsHuman = new JMenuItem("Robot vs. Human");
+        var robotVsRobot = new JMenuItem("Robot vs. Robot");
+        var exit = new JMenuItem("Exit");
+
+        gameMenu.setName("MenuGame");
+        humanVsHuman.setName("MenuHumanHuman");
+        humanVsRobot.setName("MenuHumanRobot");
+        robotVsHuman.setName("MenuRobotHuman");
+        robotVsRobot.setName("MenuRobotRobot");
+        exit.setName("MenuExit");
+
+        gameMenu.setMnemonic('g');
+        humanVsHuman.setMnemonic('1');
+        humanVsRobot.setMnemonic('2');
+        robotVsHuman.setMnemonic('3');
+        robotVsRobot.setMnemonic('4');
+
+        humanVsHuman.addActionListener(e -> resetAndStartNewGame(HUMAN, HUMAN));
+        humanVsRobot.addActionListener(e -> resetAndStartNewGame(HUMAN, ROBOT));
+        robotVsHuman.addActionListener(e -> resetAndStartNewGame(ROBOT, HUMAN));
+        robotVsRobot.addActionListener(e -> resetAndStartNewGame(ROBOT, ROBOT));
+        exit.addActionListener(e -> System.exit(0));
+
+        gameMenu.add(humanVsHuman);
+        gameMenu.add(humanVsRobot);
+        gameMenu.add(robotVsHuman);
+        gameMenu.add(robotVsRobot);
+        gameMenu.addSeparator();
+        gameMenu.add(exit);
+
+        menuBar.add(gameMenu);
+
+        return menuBar;
     }
 
     private JPanel createGameField() {
@@ -140,6 +182,21 @@ public class TicTacToeView extends JFrame {
         panel.add(BorderLayout.WEST, stateLabel);
 
         return panel;
+    }
+
+    private void resetAndStartNewGame(Mode player1, Mode player2) {
+        mode[0] = player1;
+        mode[1] = player2;
+
+        controller.resetGame();
+        leftPlayerBtn.setText(mode[0].name);
+        rightPlayerBtn.setText(mode[1].name);
+        controller.startGame(mode);
+
+        if (!gameStarted) {
+            gameStarted = true;
+            startResetBtn.setText(RESET);
+        }
     }
 
     public void setGameStateMessage(String msg) {
