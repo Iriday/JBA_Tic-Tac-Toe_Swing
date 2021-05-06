@@ -2,12 +2,15 @@ package tictactoe;
 
 import javax.swing.*;
 
+import java.text.MessageFormat;
 import java.util.List;
 
 import static tictactoe.Mode.*;
 
 public class TicTacToeController {
     private static final int ROBOT_MOVE_DELAY = 500;
+    private static final MessageFormat turnFormat = new MessageFormat("The turn of {0} Player ({1})");
+    private static final MessageFormat winnerFormat = new MessageFormat("The {0} Player ({1}) wins");
     private final TicTacToeView view;
     private final TicTacToeModel model;
     private volatile boolean makingMove;
@@ -20,7 +23,7 @@ public class TicTacToeController {
         this.model = new TicTacToeModel();
 
         view.initialize(this);
-        view.setGameStateMessage(model.getGameState().message);
+        view.setGameStateMessage(getFormattedGameState());
         view.setFieldButtonsEnabled(false);
     }
 
@@ -29,7 +32,7 @@ public class TicTacToeController {
         this.mode = mode;
 
         view.setFieldButtonsEnabled(true);
-        view.setGameStateMessage(GameState.IN_PROGRESS.message);
+        view.setGameStateMessage(getCurrentTurnStr());
         view.setPlayerButtonsEnabled(false);
 
         if (mode[0] == ROBOT && mode[1] == ROBOT) {
@@ -49,8 +52,7 @@ public class TicTacToeController {
 
         if (model.makeMove(row, col)) {
             view.redrawFieldSquare(row, col, model.getGameField()[row][col]);
-            var gameState = model.getGameState();
-            view.setGameStateMessage(gameState.message);
+            view.setGameStateMessage(getFormattedGameState());
 
             if (model.isGameFinished()) {
                 view.setFieldButtonsEnabled(false);
@@ -74,7 +76,7 @@ public class TicTacToeController {
 
         model.resetGame();
         view.clearField();
-        view.setGameStateMessage(model.getGameState().message);
+        view.setGameStateMessage(getFormattedGameState());
         view.setPlayerButtonsEnabled(true);
         view.setFieldButtonsEnabled(false);
 
@@ -110,9 +112,7 @@ public class TicTacToeController {
                 int[] coords = chunks.get(0);
 
                 view.redrawFieldSquare(coords[0], coords[1], model.getGameField()[coords[0]][coords[1]]);
-
-                var gameState = model.getGameState();
-                view.setGameStateMessage(gameState.message);
+                view.setGameStateMessage(getFormattedGameState());
 
                 if (model.isGameFinished()) {
                     view.setFieldButtonsEnabled(false);
@@ -124,6 +124,38 @@ public class TicTacToeController {
             robotMoveWorker.execute();
         } catch (Exception e) {
             throw new RuntimeException(e);
+        }
+    }
+
+    private String getCurrentTurnStr() {
+        String currPlayerName = model.getCurrentPlayer();
+        String currPlayerType = currPlayerName.equals(model.xPlayer) ? mode[0].name : mode[1].name;
+
+        return turnFormat.format(new String[]{currPlayerType, currPlayerName});
+    }
+
+    private String getWinnerStr() {
+        String winnerName = model.getCurrentPlayer().equals(model.xPlayer) ? model.oPlayer : model.xPlayer;
+        String winnerType = winnerName.equals(model.xPlayer) ? mode[0].name : mode[1].name;
+
+        return winnerFormat.format(new String[]{winnerType, winnerName});
+    }
+
+
+    private String getFormattedGameState() {
+
+        switch (model.getGameState()) {
+            case NOT_STARTED, DRAW:
+                return model.getGameState().message;
+
+            case IN_PROGRESS:
+                return getCurrentTurnStr();
+
+            case X_WINS, O_WINS:
+                return getWinnerStr();
+
+            default:
+                throw new IllegalArgumentException("Something went wrong");
         }
     }
 

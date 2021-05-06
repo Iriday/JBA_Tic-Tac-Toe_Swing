@@ -9,8 +9,9 @@ public class TicTacToeModel {
 
     private final int rows;
     private final int cols;
-    private final String oPlayer;
-    private final String xPlayer;
+
+    public final String oPlayer;
+    public final String xPlayer;
 
     private String[][] gameField;
     private boolean playerSwitcher;
@@ -66,7 +67,7 @@ public class TicTacToeModel {
     }
 
     private void move(int row, int col) {
-        gameField[row][col] = playerSwitcher ? oPlayer : xPlayer;
+        gameField[row][col] = getCurrentPlayer();
         playerSwitcher = !playerSwitcher;
     }
 
@@ -92,6 +93,10 @@ public class TicTacToeModel {
 
     public boolean isGameFinished() {
         return isWinner(gameField, oPlayer) || isWinner(gameField, xPlayer) || isFieldFull(gameField);
+    }
+
+    public String getCurrentPlayer(){
+        return playerSwitcher ? oPlayer : xPlayer;
     }
 
     private static String[][] generateGameField(int rows, int cols) {

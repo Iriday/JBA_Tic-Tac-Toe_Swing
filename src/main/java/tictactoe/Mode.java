@@ -3,9 +3,9 @@ package tictactoe;
 public enum Mode {
     HUMAN("Human"), ROBOT("Robot");
 
-    final String mode;
+    final String name;
 
-    Mode(String mode) {
-        this.mode = mode;
+    Mode(String name) {
+        this.name = name;
     }
 }

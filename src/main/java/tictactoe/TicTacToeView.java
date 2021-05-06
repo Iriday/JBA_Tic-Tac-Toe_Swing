@@ -102,21 +102,21 @@ public class TicTacToeView extends JFrame {
     private JPanel createTopPanel() {
         var panel = new JPanel();
         startResetBtn = new JButton(START);
-        leftPlayerBtn = new JButton(mode[0].mode);
-        rightPlayerBtn = new JButton(mode[1].mode);
+        leftPlayerBtn = new JButton(mode[0].name);
+        rightPlayerBtn = new JButton(mode[1].name);
 
         startResetBtn.addActionListener(startResetGameListener);
         startResetBtn.setName("ButtonStartReset");
 
         leftPlayerBtn.addActionListener(event -> {
             mode[0] = mode[0] == HUMAN ? ROBOT : HUMAN;
-            leftPlayerBtn.setText(mode[0].mode);
+            leftPlayerBtn.setText(mode[0].name);
         });
         leftPlayerBtn.setName("ButtonPlayer1");
 
         rightPlayerBtn.addActionListener(event -> {
             mode[1] = mode[1] == HUMAN ? ROBOT : HUMAN;
-            rightPlayerBtn.setText(mode[1].mode);
+            rightPlayerBtn.setText(mode[1].name);
         });
         rightPlayerBtn.setName("ButtonPlayer2");
 
